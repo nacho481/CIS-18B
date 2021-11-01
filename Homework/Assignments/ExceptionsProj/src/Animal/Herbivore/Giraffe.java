@@ -1,4 +1,5 @@
 package Animal.Herbivore;
+
 import Animal.Animal;
 
 /** The Giraffe class is simply a container class.
@@ -10,6 +11,7 @@ import Animal.Animal;
  * @version %I% %G%
  * @since 1.8.0_821
  */
+
 public class Giraffe implements Animal
 {
     private String name, type = "Giraffee";

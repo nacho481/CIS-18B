@@ -1,5 +1,4 @@
 package Animal.Carnivore;
-
 import Animal.Animal;
 
 /**
