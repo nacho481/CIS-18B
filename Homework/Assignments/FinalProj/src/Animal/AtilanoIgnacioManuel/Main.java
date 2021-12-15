@@ -21,13 +21,40 @@ import Animal.Carnivore.Lion;
 public class Main
 {
     private static ArrayList<Animal> animalList = new ArrayList<Animal>();
-
+    
     public static void main(String[] args)
     {
-        new Frame();
+        int noThreads = 0;
+        Scanner scan = new Scanner(System.in);
+        final File outputFile = new File("output.txt");
+        BufferedWriter fileWriter;
+
+        System.out.println("How many Giraffes?");
+        int gif = scan.nextInt();
+        createAnimal("Giraffe", gif);
+
+        System.out.println("How many Lions?");
+        int lion = scan.nextInt();
+        createAnimal("Lion", lion);
+
+        System.out.println("How many threads: ");
+        noThreads = scan.nextInt();
+
+        try {
+            fileWriter = new BufferedWriter(new FileWriter(outputFile));
+            for(Animal currentAnimal : animalList)
+            {
+                fileWriter.write(currentAnimal.getName() + " is a " + currentAnimal.getType() + "\n");
+                System.out.println(currentAnimal.getName() + " is a " + currentAnimal.getType());
+            }
+            fileWriter.close();
+            System.out.println("\nSuccessfully outputted to file!\n" + outputFile.getAbsolutePath());
+        }
+        catch(FileNotFoundException e) { e.printStackTrace(); }
+        catch(IOException e) { e.printStackTrace();}
+        catch(Exception e) {System.err.println("Error!");}
     }
 
-    /*
     //7. Using a loop, create a Lion for each lion the user asked for, using the names from the file to create the name.  Do the same thing for the giraffes (you can use the same name list for both).  I recommend using an ArrayList.
     public static void createAnimal(String animal, int noAnimals)
     {
@@ -66,34 +93,6 @@ public class Main
                 System.out.println("Error creating, running or finishing threads!");
             }
         }
-    }*/
-    /*int noThreads = 0;
-        Scanner scan = new Scanner(System.in);
-        final File outputFile = new File("output.txt");
-        BufferedWriter fileWriter;
+    }
 
-        System.out.println("How many Giraffes?");
-        int gif = scan.nextInt();
-        createAnimal("Giraffe", gif);
-
-        System.out.println("How many Lions?");
-        int lion = scan.nextInt();
-        createAnimal("Lion", lion);
-
-        System.out.println("How many threads: ");
-        noThreads = scan.nextInt();
-
-        try {
-            fileWriter = new BufferedWriter(new FileWriter(outputFile));
-            for(Animal currentAnimal : animalList)
-            {
-                fileWriter.write(currentAnimal.getName() + " is a " + currentAnimal.getType() + "\n");
-                System.out.println(currentAnimal.getName() + " is a " + currentAnimal.getType());
-            }
-            fileWriter.close();
-            System.out.println("\nSuccessfully outputted to file!\n" + outputFile.getAbsolutePath());
-        }
-        catch(FileNotFoundException e) { e.printStackTrace(); }
-        catch(IOException e) { e.printStackTrace();}
-        catch(Exception e) {System.err.println("Error!");}*/
 }
