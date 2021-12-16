@@ -7,7 +7,6 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.BorderFactory;
 
 import Animal.*;    // import all packages
 import Animal.Herbivore.Giraffe;
@@ -20,16 +19,16 @@ public class Frame extends JFrame implements ActionListener
     /* ==================== VARIABLES ====================*/
 
     // Primitive variables
-    private static int input;
-    private static Scanner fileReader;
-    private static File inputFile, outputFolder;
-    private static ArrayList<Animal> animalList = new ArrayList<Animal>();
-    private static ArrayList<Run> threadList = new ArrayList<Run>();
+    private static int m_input;
+    private static Scanner m_fileReader;
+    private static File m_inputFile, m_outputFolder;
+    private static ArrayList<Animal> m_animalList = new ArrayList<Animal>();
+    private static ArrayList<Run> m_threadList = new ArrayList<Run>();
 
     // JavaFX related variables
-    private static JButton inputBut, outputBut, finishedButton;
-    private static JTextField lionInput, giraffeInput, threadsInput;
-    private static boolean isThreadInput, isLionInput, isGiraffeInput, isInputFile, isOutputFolder = false;
+    private static JButton m_inputButton, m_outputButton, m_finishedButton;
+    private static JTextField m_lionInput, m_giraffeInput, m_threadsInput;
+    private static boolean m_threadFlag, m_lionFlag, m_giraffeFlag, m_inputFlag, m_outputFolderFlag = false;
 
     /* ==================== VARIABLES ====================*/
 
@@ -44,48 +43,48 @@ public class Frame extends JFrame implements ActionListener
 
 
         // Button select
-        inputBut = new JButton("Select File");  // let user select file with button
-        inputBut.addActionListener(this);         // let the button add itself to JFrame
+        m_inputButton = new JButton("Select File");  // let user select file with button
+        m_inputButton.addActionListener(this);         // let the button add itself to JFrame
         // inputBut.setBackground(Color.decode("#F7FFF7")); // consider refactoring to a linear gradient
 
 
-        outputBut = new JButton("Select Output Folder");
+        m_outputButton = new JButton("Select Output Folder");
         // outputBut.setBackground(Color.decode("#003249"));    // consider refactoring to a linear gradient
-        outputBut.addActionListener(this);
+        m_outputButton.addActionListener(this);
 
         // Configure finished button
-        finishedButton = new JButton("Finished");   // let user see this is the finished button
-        finishedButton.addActionListener(this);       // let button add itself to JFrame
+        m_finishedButton = new JButton("Finished");   // let user see this is the finished button
+        m_finishedButton.addActionListener(this);       // let button add itself to JFrame
 
         // Get no. of lions from user
-        lionInput = new JTextField("How many lions?");
-        lionInput.setHorizontalAlignment(JTextField.CENTER);
-        lionInput.setBackground(Color.decode("#9AD1D4"));
+        m_lionInput = new JTextField("How many lions?");
+        m_lionInput.setHorizontalAlignment(JTextField.CENTER);
+        m_lionInput.setBackground(Color.decode("#9AD1D4"));
 
         /* Had classmate show me that adding focus is a good idea */
-        lionInput.addFocusListener
+        m_lionInput.addFocusListener
                 (new FocusAdapter()
                     {
                         public void focusGained(FocusEvent e)
                         {
-                            if(lionInput.getText().equalsIgnoreCase("How many lions?"))
-                                lionInput.setText(null);
+                            if(m_lionInput.getText().equalsIgnoreCase("How many lions?"))
+                                m_lionInput.setText(null);
                         }
 
                         public void focusLost(FocusEvent e)
                         {
-                            if(lionInput.getText().equals(""))
+                            if(m_lionInput.getText().equals(""))
                             {
-                                lionInput.setText("How many lions?");
-                                isLionInput = false;
+                                m_lionInput.setText("How many lions?");
+                                m_lionFlag = false;
                             }
                             else
-                                isLionInput = true;
+                                m_lionFlag = true;
                         }
                     }
                 );
 
-        lionInput.addKeyListener
+        m_lionInput.addKeyListener
                 (new KeyAdapter() {
                         @Override
                         public void keyTyped(KeyEvent e)
@@ -98,38 +97,34 @@ public class Frame extends JFrame implements ActionListener
                     }
                 );
 
-        giraffeInput = new JTextField("How many Giraffes?");
-        giraffeInput.setHorizontalAlignment(JTextField.CENTER);
-        giraffeInput.setBackground(Color.decode("#CCDBDC"));
-
-
-
-        // Make UI Easier to use and understand
+        m_giraffeInput = new JTextField("How many Giraffes?");
+        m_giraffeInput.setHorizontalAlignment(JTextField.CENTER);
+        m_giraffeInput.setBackground(Color.decode("#CCDBDC"));
 
         // Once more, add focus on giraffe
-        giraffeInput.addFocusListener
+        m_giraffeInput.addFocusListener
                 (new FocusAdapter() {
                     public void focusGained(FocusEvent e) {
-                        if (giraffeInput.getText().equalsIgnoreCase("How many Giraffes?"))
-                            giraffeInput.setText(null);
+                        if (m_giraffeInput.getText().equalsIgnoreCase("How many Giraffes?"))
+                            m_giraffeInput.setText(null);
                     }
 
                     public void focusLost(FocusEvent e)
                     {
-                        if(giraffeInput.getText().equals(""))
+                        if(m_giraffeInput.getText().equals(""))
                         {
-                            giraffeInput.setText("How many Giraffes?");
-                            isGiraffeInput = false;
+                            m_giraffeInput.setText("How many Giraffes?");
+                            m_giraffeFlag = false;
                         }
                         else
-                            isGiraffeInput = true;
+                            m_giraffeFlag = true;
                     }
 
                  }
                 );
 
         // Ensure it is an integer
-        giraffeInput.addKeyListener(new KeyAdapter()
+        m_giraffeInput.addKeyListener(new KeyAdapter()
         {
             public void KeyTyped(KeyEvent e)
             {
@@ -140,49 +135,48 @@ public class Frame extends JFrame implements ActionListener
         });
 
         // Get input for number of threads
-        threadsInput = new JTextField("How many Threads");
-        threadsInput.setHorizontalAlignment(JTextField.CENTER);
-        threadsInput.setBackground(Color.decode("#007EA7"));
-        threadsInput.addFocusListener(new FocusAdapter()
+        m_threadsInput = new JTextField("How many Threads?");
+        m_threadsInput.setHorizontalAlignment(JTextField.CENTER);
+        m_threadsInput.setBackground(Color.decode("#007EA7"));
+        m_threadsInput.addFocusListener(new FocusAdapter()
             {
-                public void FocusGained(FocusEvent e)
+                public void focusGained(FocusEvent e)
                 {
-                    if(threadsInput.getText().equalsIgnoreCase("How many Threads?"))
-                        threadsInput.setText(null);
+                    if(m_threadsInput.getText().equalsIgnoreCase("How many Threads?"))
+                        m_threadsInput.setText(null);
                 }
 
                 public void focusLost(FocusEvent e)
                 {
-                    if(threadsInput.getText().equals(""))
+                    if(m_threadsInput.getText().equals(""))
                     {
-                        threadsInput.setText("How many Threads");
-                        isThreadInput = false;
+                        m_threadsInput.setText("How many Threads?");
+                        m_threadFlag = false;
                     }
                     else
-                        isThreadInput = true;
+                        m_threadFlag = true;
                 }
             }
         );
 
-        threadsInput.addKeyListener(new KeyAdapter() {
+        m_threadsInput.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e)
             {
                 char c = e.getKeyChar();
                 if (!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))
                     e.consume();
-
             }
         }
         );
 
         // Now that the buttons are properly configured
         // Add them to the JFrame
-        this.add(inputBut);
-        this.add(outputBut);
-        this.add(giraffeInput);
-        this.add(lionInput);
-        this.add(threadsInput);
-        this.add(finishedButton);
+        this.add(m_inputButton);
+        this.add(m_outputButton);
+        this.add(m_giraffeInput);
+        this.add(m_lionInput);
+        this.add(m_threadsInput);
+        this.add(m_finishedButton);
 
         // Better formatting when declared here
         this.setSize(500, 500);
@@ -197,7 +191,7 @@ public class Frame extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
         // if the input button is clicked
-        if(e.getSource() == inputBut)
+        if(e.getSource() == m_inputButton)
         {
             // Begin file chooser
             JFileChooser fileChooser = new JFileChooser();
@@ -206,19 +200,19 @@ public class Frame extends JFrame implements ActionListener
 
             if(response == JFileChooser.APPROVE_OPTION)
             {
-                inputFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                inputBut.setText(inputFile.getPath());
-                isInputFile = true;
+                m_inputFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                m_inputButton.setText(m_inputFile.getPath());
+                m_inputFlag = true;
             }
             else
             {
-                isInputFile = false;
-                inputBut.setText("Select File");
+                m_inputFlag = false;
+                m_inputButton.setText("Select File");
             }
         }
 
         // Output button
-        if(e.getSource() == outputBut)
+        if(e.getSource() == m_outputButton)
         {
             // File chooser with settings
             JFileChooser fileChooser = new JFileChooser();
@@ -228,38 +222,37 @@ public class Frame extends JFrame implements ActionListener
             // Verify the path is valid
             if(response == JFileChooser.APPROVE_OPTION)
             {
-                outputFolder = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                outputBut.setText(outputFolder.getPath());
-                isOutputFolder = true;
+                m_outputFolder = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                m_outputButton.setText(m_outputFolder.getPath());
+                m_outputFolderFlag = true;
             }
             else
             {
-                isOutputFolder = false;
-                outputBut.setText("Select Output Folder");
+                m_outputFolderFlag = false;
+                m_outputButton.setText("Select Output Folder");
 
             }
         }
 
         // Finished Button
-        if(e.getSource() == finishedButton)
+        if(e.getSource() == m_finishedButton)
         {
-            // clear list after use
-            animalList.clear();
-            // Check to make sure all fields are filled out and start main functions
-            // isThreadInput isLionInput isGiraffeInput isInputFile isOutputFolder
-            // isInputFile isOutputFolder isThreadInput isLionInput
-            if ((isInputFile || isOutputFolder || isThreadInput || isLionInput || isGiraffeInput))
+            // clear to be safe
+            m_animalList.clear();
+
+            // Check flags to make sure everything is in order
+            if (m_inputFlag || m_outputFolderFlag || m_threadFlag || m_lionFlag || m_giraffeFlag)
             {
-                /* get text from giraffee button and parse it to an integer
+                /* get text from giraffe button and parse it to an integer
                 * to store into a variable and do that for the other variables
                 * that are alike */
-                input = Integer.parseInt(giraffeInput.getText());
+                m_input = Integer.parseInt(m_giraffeInput.getText());
                 createAnimal("Giraffe");
 
-                input = Integer.parseInt(lionInput.getText());
+                m_input = Integer.parseInt(m_lionInput.getText());
                 createAnimal("Lion");
 
-                input = Integer.parseInt(threadsInput.getText());
+                m_input = Integer.parseInt(m_threadsInput.getText());
 
                 Threads();
                 startThreads();
@@ -276,48 +269,42 @@ public class Frame extends JFrame implements ActionListener
     {
         try
         {
-            fileReader = new Scanner(inputFile);
-            if(animal.equalsIgnoreCase("Giraffee"))
+            m_fileReader = new Scanner(m_inputFile);
+            if(animal.equalsIgnoreCase("Giraffe"))
             {
-                for( int x = input; x > 0; --x)
-                    animalList.add(new Giraffe(fileReader.nextLine()));
+                for(int x = m_input; x > 0; --x)
+                    m_animalList.add(new Giraffe(m_fileReader.nextLine()));
             }
             else if(animal.equalsIgnoreCase("Lion"))
             {
-                for(int x = input; x > 0; --x)
-                    animalList.add(new Lion(fileReader.nextLine()));
+                for(int x = m_input; x > 0; --x)
+                    m_animalList.add(new Lion(m_fileReader.nextLine()));
             }
-            fileReader.close();     // good practice to close
+            m_fileReader.close();     // good practice to close
         }
-        catch(Exception e)
-        {
-            System.err.println("Error creating animal");
-        }
+        catch(Exception e) { System.err.println("Error creating animal"); }
     }
 
     public static void Threads()
     {
-        for(int x = 0; x < input; ++x)
+        for(int x = 0; x < m_input; ++x)
         {
             Run run = Run.createAndStart
-                    ("thread " + x, outputFolder.getAbsolutePath() + "/output" +
-                            + x + ".txt", animalList);
-            threadList.add(run);
+                    ("thread " + x, m_outputFolder.getAbsolutePath() + "/output" +
+                            + x + ".txt", m_animalList);
+            m_threadList.add(run);
         }
     }
 
     public static void startThreads()
     {
-        for(int x = 0;x < input; ++x)
+        for(int x = 0; x < m_input; ++x)
         {
             try
             {
-                threadList.get(x).getThread().join();   // this was sooo ticky
+                m_threadList.get(x).getThread().join();   // this was sooo ticky
             }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
+            catch(Exception e) { e.printStackTrace(); }
         }
     }
 

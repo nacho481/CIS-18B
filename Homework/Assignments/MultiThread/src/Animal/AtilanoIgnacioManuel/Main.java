@@ -1,14 +1,4 @@
 package Animal.AtilanoIgnacioManuel;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-import Animal.Animal;
-import Animal.Herbivore.Giraffe;
-import Animal.Carnivore.Lion;
 
 /**
  * The Main class will test out the speak() method implemented
@@ -20,7 +10,7 @@ import Animal.Carnivore.Lion;
 
 public class Main
 {
-    private static ArrayList<Animal> animalList = new ArrayList<Animal>();
+    // private static ArrayList<Animal> animalList = new ArrayList<Animal>();
 
     public static void main(String[] args)
     {
